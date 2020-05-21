@@ -30,6 +30,10 @@ class OpxImage
             return null;
         }
 
+        if(!self::isResizeable($diskPath . $filename)){
+            return $filename;
+        }
+
         $info = pathinfo($filename);
 
         $localPath = $info['dirname'] . DIRECTORY_SEPARATOR;
@@ -52,6 +56,20 @@ class OpxImage
         }
 
         return $localPath . $newName;
+    }
+
+    /**
+     * Check file can be resized.
+     *
+     * @param $filename
+     *
+     * @return  bool
+     */
+    protected static function isResizeable($filename): bool
+    {
+        $mime = mime_content_type($filename);
+
+        return $mime === 'image/jpeg' || $mime === 'image/png' || $mime === 'image/gif' || $mime === 'image/bmp';
     }
 
     /**
