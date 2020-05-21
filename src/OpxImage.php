@@ -152,12 +152,31 @@ class OpxImage
         // Create new image with calculated size
         $new_image = imagecreatetruecolor($new_w, $new_h);
 
+        if($mime_type === IMAGETYPE_PNG) {
+            imagealphablending( $new_image, false );
+            imagesavealpha( $new_image, true );
+        }
+
         // Resize image
         imagecopyresampled($new_image, $image, 0, 0, 0, 0, $new_w, $new_h, $src_w, $src_h);
 
         // And save. Done!
-        imagejpeg($new_image, $dest, $quality);
-
+        switch ($mime_type) {
+            case IMAGETYPE_BMP:
+                imagebmp($new_image, $dest, true);
+                break;
+            case IMAGETYPE_GIF:
+                imagegif($new_image, $dest);
+                break;
+            case IMAGETYPE_JPEG:
+                imagejpeg($new_image, $dest, $quality);
+                break;
+            case IMAGETYPE_PNG:
+                imagepng($new_image, $dest);
+                break;
+            default:
+                throw new \UnexpectedValueException("Unknown file format [{$sizes['mime']}, {$mime_type}] of '{$src}'.");
+        }
         // Now free memory.
         imagedestroy($image);
         imagedestroy($new_image);
