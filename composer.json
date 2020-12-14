@@ -19,9 +19,9 @@
     }
   ],
   "require": {
-    "php": "^7.2",
+    "php": "^7.3.0",
     "symfony/finder": "4.3.*",
-    "illuminate/support": "5.7.*",
+    "illuminate/support": "8.0.*",
     "ext-fileinfo": "*",
     "ext-gd": "*"
   },
