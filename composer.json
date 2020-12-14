@@ -20,7 +20,7 @@
   ],
   "require": {
     "php": "^7.3.0",
-    "symfony/finder": "^5.1.14",
+    "symfony/finder": "^5.1.*",
     "illuminate/support": "8.0.*",
     "ext-fileinfo": "*",
     "ext-gd": "*"
