@@ -3,7 +3,9 @@
 namespace Modules\Opx\Image;
 
 use Illuminate\Support\Facades\Storage;
+use RuntimeException;
 use Symfony\Component\Finder\Finder;
+use UnexpectedValueException;
 
 class OpxImage
 {
@@ -45,7 +47,7 @@ class OpxImage
         if (!file_exists($diskPath . $localPath . $newName)) {
             $dir = pathinfo($diskPath . $localPath . $newName, PATHINFO_DIRNAME);
             if (!is_dir($dir) && !mkdir($dir, 0777, true) && !is_dir($dir)) {
-                throw new \RuntimeException(sprintf('Directory "%s" was not created', $dir));
+                throw new RuntimeException(sprintf('Directory "%s" was not created', $dir));
             }
 
             // Delete old cached files if they are existing.
@@ -81,7 +83,7 @@ class OpxImage
      *
      * @return  void
      */
-    protected static function deleteOld($path, $name, $modifyDate): void
+    protected static function deleteOld(string $path, string $name, string $modifyDate): void
     {
         $files = Finder::create()->in($path)->name("/^{$name}_/");
         foreach ($files as $file) {
@@ -102,7 +104,7 @@ class OpxImage
      *
      * @return  void
      */
-    protected static function resize($src, $size, $ratio, $quality, $dest): void
+    protected static function resize(string $src, int $size, array $ratio, int $quality, string $dest): void
     {
         $sizes = getimagesize($src);
 
@@ -146,7 +148,7 @@ class OpxImage
                 $image = imagecreatefrompng($src);
                 break;
             default:
-                throw new \UnexpectedValueException("Unknown file format [{$sizes['mime']}, {$mime_type}] of '{$src}'.");
+                throw new UnexpectedValueException("Unknown file format [{$sizes['mime']}, {$mime_type}] of '{$src}'.");
         }
 
         // Create new image with calculated size
@@ -175,7 +177,7 @@ class OpxImage
                 imagepng($new_image, $dest);
                 break;
             default:
-                throw new \UnexpectedValueException("Unknown file format [{$sizes['mime']}, {$mime_type}] of '{$src}'.");
+                throw new UnexpectedValueException("Unknown file format [{$sizes['mime']}, {$mime_type}] of '{$src}'.");
         }
         // Now free memory.
         imagedestroy($image);
